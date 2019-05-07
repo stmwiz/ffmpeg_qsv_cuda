@@ -45,6 +45,36 @@ make install PREFIX=/usr
 ./configure --enable-nonfree --disable-shared  --enable-cuda-nvcc  --toolchain=msvc --enable-libnpp  --enable-libmfx --arch=x86_64  --extra-cflags="-I../nv_sdk/include -I../intel_sdk/include" --extra-ldflags="-libpath:../nv_sdk/lib/x64 -libpath:../intel_sdk/lib/x64" --prefix=./build --enable-gpl
 
 11.make -j4
+erro:
+其中的报错：
+1.c++ 常量中有换行符
+
+fftools/ffprobe.c(3047): error C2001: 常量中有换行符
+
+我就把这一行ffprobe.c的3047行打印字符给注释了，两处代码：
+
+//av_log(NULL, level, "%sbuilt with %s\n", indent, CC_IDENT);
+
+//print_str("compiler_ident", CC_IDENT);
+
+还有如下报错：也是因为CC_IDENT引起的，解决方法就是上面注释
+
+fftools/cmdutils.c(1119): error C2065: “slib”: 未声明的标识符
+fftools/cmdutils.c(1119): error C2296: “%”: 非法，左操作数包含“char [138]”类型
+fftools/cmdutils.c(1119): error C2059: 语法错误:“数字上的错误后缀”
+fftools/cmdutils.c(1119): error C2059: 语法错误:“%”
+fftools/cmdutils.c(1119): error C2017: 非法的转义序列
+fftools/cmdutils.c(1119): error C2001: 常量中有换行符
+fftools/cmdutils.c(1150): error C2143: 语法错误: 缺少“)”(在“*”的前面)
+fftools/cmdutils.c(1150): error C2143: 语法错误: 缺少“{”(在“*”的前面)
+fftools/cmdutils.c(1150): error C2059: 语法错误:“)”
+fftools/cmdutils.c(1151): error C2054: 在“options”之后应输入“(”
+fftools/cmdutils.c(1252): error C2143: 语法错误: 缺少“)”(在“*”的前面)
+fftools/cmdutils.c(1252): error C2143: 语法错误: 缺少“{”(在“*”的前面)
+fftools/cmdutils.c(1252): error C2059: 语法错误:“)”
+fftools/cmdutils.c(1253): error C2054: 在“avclass”之后应输入“(”
+fftools/cmdutils.c(1261): error C2275: “AVInputFormat”: 将此类型用作表达式非法
+
 
 qsv:
 
@@ -53,3 +83,5 @@ ffmpeg.exe -rtbufsize 1G -init_hw_device qsv=hw -filter_hw_device hw  -f dshow  
 cuda:
 
 ffmpeg.exe -y -vsync 0 -init_hw_device cuda=foo:bar -filter_hw_device foo -f dshow  -i video="TBS 6314 HDMI Video Input0" -vf 'scale_cuda=1280:720' -c:a copy -c:v h264_nvenc -b:v 5M -f rtp_mpegts rtp://127.0.0.1:4567
+
+
