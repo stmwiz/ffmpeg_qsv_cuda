@@ -26,3 +26,9 @@ make install PREFIX=/usr
  //unset PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
 ./configure --enable-nonfree --disable-shared  --enable-cuda-nvcc  --toolchain=msvc --enable-libnpp  --enable-libmfx --arch=x86_64  --extra-cflags="-I../nv_sdk/include -I../intel_sdk/include" --extra-ldflags="-libpath:../nv_sdk/lib/x64 -libpath:../intel_sdk/lib/x64" --prefix=./build --enable-gpl
 11.make -j4
+
+qsv:
+ffmpeg.exe -rtbufsize 1G -init_hw_device qsv=hw -filter_hw_device hw  -f dshow  -i video="TBS 6314 HDMI Video Input0"  -video_device_number 0 -vf 'hwupload=extra_hw_frames=64,format=qsv,scale_qsv=w=1280:h=720,vpp_qsv=deinterlace=2:framerate=30' -c:v h264_qsv  -f rtp_mpegts rtp://127.0.0.1:4567
+
+cuda:
+ffmpeg.exe -y -vsync 0 -init_hw_device cuda=foo:bar -filter_hw_device foo -f dshow  -i video="TBS 6314 HDMI Video Input0" -vf 'scale_cuda=1280:720' -c:a copy -c:v h264_nvenc -b:v 5M -f rtp_mpegts rtp://127.0.0.1:4567
