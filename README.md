@@ -38,6 +38,7 @@ export PATH="/c/Program Files (x86)/IntelSWTools/Intel(R) Media SDK 2018 R2/Soft
 9. Goto nv-codec-headers directory and install ffnvcodec
 
 make install PREFIX=/usr
+
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH
 10.
 
