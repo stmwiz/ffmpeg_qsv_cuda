@@ -78,12 +78,32 @@ fftools/cmdutils.c(1253): error C2054: 在“avclass”之后应输入“(”
 fftools/cmdutils.c(1261): error C2275: “AVInputFormat”: 将此类型用作表达式非法
 
 
-qsv:
-
 ffmpeg.exe -rtbufsize 1G -init_hw_device qsv=hw -filter_hw_device hw  -f dshow  -i video="TBS 6314 HDMI Video Input0"  -video_device_number 0 -vf 'hwupload=extra_hw_frames=64,format=qsv,scale_qsv=w=1280:h=720,vpp_qsv=deinterlace=2:framerate=30' -c:v h264_qsv  -f rtp_mpegts rtp://127.0.0.1:4567
 
 cuda:
+ffmpeg.exe -y -vsync 0 -init_hw_device cuda=foo:bar -filter_hw_device foo -f dshow  -i video="TBS 6314 HDMI Video Input0" -vf 'hwupload,scale_cuda=1280:720' -c:a copy -c:v h264_nvenc -b:v 5M -f rtp_mpegts rtp://127.0.0.1:4567
 
-ffmpeg.exe -y -vsync 0 -init_hw_device cuda=foo:bar -filter_hw_device foo -f dshow  -i video="TBS 6314 HDMI Video Input0" -vf 'scale_cuda=1280:720' -c:a copy -c:v h264_nvenc -b:v 5M -f rtp_mpegts rtp://127.0.0.1:4567
+./ffmpeg.exe -y -vsync 0 -hwaccel cuvid â€“resize 1280x720 -c:v h264_cuvid -i Z:\video\test\chun2.mp4 -c:a copy -c:v h264_nvenc -b:v 5M output.mp4
 
+x264 :
+ffmpeg.exe  -i 4.mp4 -s 1920x1080 -aspect 16:9 -c:v libx264 -profile:v high  -x264opts "level=4.2:bitrate=8000:vbv-maxrate=8000:vbv-bufsize=8000:nal_hrd=cbr" -c:a aac -ar 48000 -b:a 256k -maxrate 256k -f mpegts  -fflags autobsf  -muxrate 9M -keyint_min 50 -g 50 -sc_threshold 0  -bf 1 -b_strategy 0 11.ts 
+
+ ffmpeg.exe  -i 4.mp4 -s 1920x1080 -aspect 16:9 -c:v libx264 -profile:v high  -x264opts "level=4.2:bitrate=8000:vbv-maxrate=8000:vbv-bufsize=8000:nal_hrd=cbr" -c:a aac -ar 48000 -b:a 256k -maxrate 256k -f mpegts  -fflags autobsf  -muxrate 9M 11.ts
+ 
+ ffmpeg.exe -rtbufsize 1G -init_hw_device qsv=hw -filter_hw_device hw  -f dshow  -i video="TBS 6314 HDMI Video Input0"  -video_device_number 0 -vf 'hwupload=extra_hw_frames=64,format=qsv,scale_qsv=w=1280:h=720,vpp_qsv=deinterlace=2:framerate=30' -c:v h264_qsv  -f rtp_mpegts rtp://127.0.0.1:4567
+ 
+ 
+ other:
+  qsv:
+ ffmpeg.exe -rtbufsize 1G -init_hw_device qsv=hw -filter_hw_device hw  -i Z:\video\test\chun1.mp4 -aspect 16:9  -vf 'hwupload=extra_hw_frames=64,format=qsv,scale_qsv=w=1920:h=1080' -c:v h264_qsv -preset veryslow -profile:v high -b:v 8000k -minrate 8000k -maxrate 8000k  -c:a aac -ar 48000 -b:a 256k -minrate 256k -maxrate 256k -f mpegts  -fflags autobsf  -muxrate 9M 11.ts
+ 
+ cuda:
+ ./ffmpeg.exe -y -vsync 0 -hwaccel cuvid -c:v h264_cuvid -i Z:\video\test\chun2.mp4 -aspect 16:9 -vf 'scale_cuda=1920:1080' -c:v h264_nvenc -preset slow -profile:v high  -level 4.2 -rc cbr_hq  -cbr true -b:v  7300k -minrate 7300k -maxrate 7300k  -c:a aac -ar 48000 -b:a 256k -minrate 256k -maxrate 256k -f mpegts  -fflags autobsf  -muxrate 8000k 22.ts
+ 
+ ./ffmpeg.exe -y -vsync 0 -hwaccel cuvid -c:v h264_cuvid â€“resize 1920x1080  -i Z:\video\test\chun2.mp4 -aspect 16:9 -c:v h264_nvenc -preset slow -profile:v high  -level 4.2 -rc cbr_hq  -cbr true -b:v  7300k -minrate 7300k -maxrate 7300k  -c:a aac -ar 48000 -b:a 256k -minrate 256k -maxrate 256k -f mpegts  -fflags autobsf  -muxrate 8000k 22.ts
+ 
+ ./ffmpeg.exe -y -vsync 0 -init_hw_device cuda=foo:bar -filter_hw_device foo -i Z:\video\test\chun2.mp4 -s 1920x1080 -aspect 16:9  -vf 'hwupload'  -c:v h264_nvenc -preset slow -profile:v high  -level 4.2 -rc cbr_hq  -cbr true -b:v  7300k -minrate 7300k -maxrate 7300k  -c:a aac -ar 48000 -b:a 256k -minrate 256k -maxrate 256k -f mpegts  -fflags autobsf  -muxrate 8000k 33.ts
+ 
+ ./ffmpeg.exe -y -vsync 0 -init_hw_device cuda=foo:bar -filter_hw_device foo -resize 1920x1080  -i Z:\video\test\chun2.mp4  -aspect 16:9  -vf 'hwupload'  -c:v h264_nvenc -preset slow -profile:v high  -level 4.2 -rc cbr_hq  -cbr true -b:v  7300k -minrate 7300k -maxrate 7300k  -c:a aac -ar 48000 -b:a 256k -minrate 256k -maxrate 256k -f mpegts  -fflags autobsf  -muxrate 8000k 33.ts
+ 
 
