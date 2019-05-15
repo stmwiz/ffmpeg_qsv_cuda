@@ -31,7 +31,7 @@ pacman -S diffutils make pkg-config yasm
 
 export PATH="/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v10.0/bin":$PATH
 
- export PATH="/c/Program Files (x86)/Microsoft Visual Studio/2019/Preview/VC/Tools/MSVC/14.20.27607/bin/Hostx64/x64":$PATH
+export PATH="/c/Program Files (x86)/Microsoft Visual Studio/2019/Preview/VC/Tools/MSVC/14.20.27607/bin/Hostx64/x64":$PATH
  
 export PATH="/c/Program Files (x86)/IntelSWTools/Intel(R) Media SDK 2018 R2/Software Development Kit/bin/x64":$PATH
 
@@ -41,9 +41,9 @@ make install PREFIX=/usr
 
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH
 10.
-
  //export PKG_CONFIG_PATH=/z/ffmpeg_project/mfx_dispatch/build/lib/pkgconfig:$PKG_CONFIG_PATH
  //unset PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+
 ./configure --enable-nonfree --disable-shared  --enable-cuda-nvcc  --toolchain=msvc --enable-libnpp  --enable-libmfx --arch=x86_64  --extra-cflags="-I../nv_sdk/include -I../intel_sdk/include" --extra-ldflags="-libpath:../nv_sdk/lib/x64 -libpath:../intel_sdk/lib/x64" --prefix=./build --enable-gpl
 
 11.make -j4
