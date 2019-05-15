@@ -7,7 +7,7 @@ windows:
 2.Clone ffnvcodec
 
  git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
-  
+
 3. Clone FFmpeg's public GIT repository.
 
 git clone https://git.ffmpeg.org/ffmpeg.git
